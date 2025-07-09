@@ -1,25 +1,31 @@
 /**
- * Use this file for JavaScript code that you want to run in the front-end
- * on posts/pages that contain this block.
+ * Frontend script for the ClickUp Pricing Table block.
  *
- * When this file is defined as the value of the `viewScript` property
- * in `block.json` it will be enqueued on the front end of the site.
- *
- * Example:
- *
- * ```js
- * {
- *   "viewScript": "file:./view.js"
- * }
- * ```
- *
- * If you're not making any changes to this file because your project doesn't need any
- * JavaScript running in the front-end, then you should delete this file and remove
- * the `viewScript` property from `block.json`.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-metadata/#view-script
+ * Handles the "See more features" toggle functionality.
  */
+document.addEventListener('DOMContentLoaded', () => {
+    const pricingTables = document.querySelectorAll('.wp-block-create-block-clickup-pricing-table');
 
-/* eslint-disable no-console */
-console.log( 'Hello World! (from create-block-clickup-pricing-table block)' );
-/* eslint-enable no-console */
+    pricingTables.forEach((table) => {
+        const toggleButton = table.querySelector('.features-toggle-button');
+        const extendedFeatures = table.querySelector('.features-extended');
+
+        if (!toggleButton || !extendedFeatures) {
+            return;
+        }
+
+        toggleButton.addEventListener('click', () => {
+            const isExpanded = toggleButton.getAttribute('aria-expanded') === 'true';
+
+            toggleButton.setAttribute('aria-expanded', !isExpanded);
+            extendedFeatures.hidden = isExpanded;
+            table.classList.toggle('is-expanded');
+
+            if (!isExpanded) {
+                toggleButton.textContent = 'See less features';
+            } else {
+                toggleButton.textContent = 'See more features';
+            }
+        });
+    });
+});
