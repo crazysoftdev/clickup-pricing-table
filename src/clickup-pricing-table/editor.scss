@@ -1,9 +1,55 @@
 /**
- * The following styles get applied inside the editor only.
- *
- * Replace them with your own styles or remove the file completely.
+ * The following styles are only applied to the editor.
  */
-
 .wp-block-create-block-clickup-pricing-table {
-	border: 1px dotted #f00;
+    .pricing-table-preview {
+        display: flex;
+        gap: 1rem;
+        border: 1px dashed #ccc;
+        padding: 1rem;
+        background: #f9f9f9;
+    }
+
+    .plan-column {
+        flex: 1;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: white;
+
+        h4 {
+            margin-top: 0;
+        }
+
+        &.plan-column--popular {
+            border-color: #1e90ff;
+            border-width: 2px;
+            position: relative;
+
+            &::before {
+                content: 'MOST POPULAR';
+                position: absolute;
+                top: -10px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #1e90ff;
+                color: white;
+                padding: 2px 8px;
+                font-size: 10px;
+                border-radius: 4px;
+                font-weight: bold;
+            }
+        }
+    }
+
+    .ai-banner-preview {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f0f0f0;
+        text-align: center;
+        border: 1px dashed #ccc;
+        border-radius: 8px;
+        font-style: italic;
+        color: #555;
+    }
 }

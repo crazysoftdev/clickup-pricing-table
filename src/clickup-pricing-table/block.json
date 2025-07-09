@@ -5,11 +5,17 @@
 	"version": "0.1.0",
 	"title": "Clickup Pricing Table",
 	"category": "widgets",
-	"icon": "smiley",
+	"icon": "money-alt",
 	"description": "Example block scaffolded with Create Block tool.",
 	"supports": {
 		"html": false
 	},
+	"attributes": {
+        "showAIBanner": {
+            "type": "boolean",
+            "default": false
+        }
+    },
 	"textdomain": "clickup-pricing-table",
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
