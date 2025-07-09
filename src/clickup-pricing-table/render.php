@@ -31,6 +31,26 @@ $wrapper_attributes = get_block_wrapper_attributes();
 
 ?>
 <div <?php echo $wrapper_attributes; ?>>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": "ClickUp",
+        "description": "The one app to replace them all.",
+        "offers": [
+            <?php foreach ( $all_plans as $index => $plan ) : ?>
+            {
+                "@type": "Offer",
+                "name": "<?php echo esc_js( $plan['plan_name'] ); ?>",
+                "price": "<?php echo is_numeric( $plan['pricing']['monthly']['price'] ) ? esc_js( $plan['pricing']['monthly']['price'] ) : '0'; ?>",
+                "priceCurrency": "USD",
+                "url": "https://clickup.com/pricing"
+            }<?php echo $index < count( $all_plans ) - 1 ? ',' : ''; ?>
+            <?php endforeach; ?>
+        ]
+    }
+    </script>
+
     <div class="pricing-table-container">
         <?php foreach ( $all_plans as $plan ) : ?>
             <?php
