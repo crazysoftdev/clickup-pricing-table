@@ -57,3 +57,41 @@ function create_block_clickup_pricing_table_block_init() {
 	}
 }
 add_action( 'init', 'create_block_clickup_pricing_table_block_init' );
+
+
+/**
+ * Fetches and caches the pricing data from the ClickUp JSON endpoint.
+ * Uses the WordPress Transients API for caching to improve performance.
+ *
+ * @return array|false The decoded pricing data as an associative array, or false on failure.
+ */
+function clickup_get_pricing_data() {
+    // 1. Try to get the data from our cache first.
+    $cached_data = get_transient( 'clickup_pricing_data_cache' );
+    if ( false !== $cached_data ) {
+        return $cached_data;
+    }
+
+    // 2. If cache is empty, fetch the data from the remote URL.
+    $response = wp_remote_get( 'https://clickup.com/data/pricing/pricing-en.json' );
+
+    // 3. Check for errors during the request.
+    if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+        // In a real project, you might log the error here.
+        // error_log( 'Failed to fetch ClickUp pricing data: ' . $response->get_error_message() );
+        return false;
+    }
+
+    $body = wp_remote_retrieve_body( $response );
+    $data = json_decode( $body, true ); // Decode as an associative array.
+
+    // 4. Check if the JSON is valid.
+    if ( ! is_array( $data ) ) {
+        return false;
+    }
+
+    // 5. If data is valid, store it in our cache (transient) for 12 hours.
+    set_transient( 'clickup_pricing_data_cache', $data, 12 * HOUR_IN_SECONDS );
+
+    return $data;
+}
