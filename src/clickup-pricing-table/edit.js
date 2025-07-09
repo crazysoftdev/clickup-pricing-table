@@ -1,41 +1,71 @@
-/**
- * Retrieves the translation of text.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
- */
 import { __ } from '@wordpress/i18n';
-
-/**
- * React hook that is used to mark the block wrapper element.
- * It provides all the necessary props like the class name.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
- */
-import { useBlockProps } from '@wordpress/block-editor';
-
-/**
- * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
- * Those files can contain any CSS code that gets applied to the editor.
- *
- * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
- */
+import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
+import { PanelBody, ToggleControl } from '@wordpress/components';
 import './editor.scss';
 
-/**
- * The edit function describes the structure of your block in the context of the
- * editor. This represents what the editor will render when the block is used.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
- *
- * @return {Element} Element to render.
- */
-export default function Edit() {
-	return (
-		<p { ...useBlockProps() }>
-			{ __(
-				'Clickup Pricing Table – hello from the editor!',
-				'clickup-pricing-table'
-			) }
-		</p>
-	);
+export default function Edit({ attributes, setAttributes }) {
+    const { showAIBanner } = attributes;
+
+    return (
+        <>
+            <InspectorControls>
+                <PanelBody title={__('Settings', 'clickup-pricing-table')}>
+                    <ToggleControl
+                        label={__('Show AI Add-on Banner', 'clickup-pricing-table')}
+                        help={
+                            showAIBanner
+                                ? __('Banner is currently visible.', 'clickup-pricing-table')
+                                : __('Banner is hidden.', 'clickup-pricing-table')
+                        }
+                        checked={showAIBanner}
+                        onChange={() => setAttributes({ showAIBanner: !showAIBanner })}
+                    />
+                </PanelBody>
+            </InspectorControls>
+
+            <div {...useBlockProps()}>
+                <div className="pricing-table-preview">
+                    {/* This is a static preview. The real data is rendered by PHP. */}
+                    <div className="plan-column">
+                        <h4>Free Forever</h4>
+                        <p className="price">FREE</p>
+                        <ul>
+                            <li>100MB Storage</li>
+                            <li>Unlimited Tasks</li>
+                            <li>Unlimited Free Plan Members</li>
+                            <li>Two-factor Authentication</li>
+                            <li>Collaborative Docs</li>
+                        </ul>
+                    </div>
+                    <div className="plan-column plan-column--popular">
+                        <h4>Business</h4>
+                        <p className="price">$12</p>
+                        <ul>
+                            <li>Everything in Unlimited, plus:</li>
+                            <li>Google SSO</li>
+                            <li>Unlimited Teams</li>
+                            <li>Custom Exporting</li>
+                            <li>Advanced Public Sharing</li>
+                        </ul>
+                    </div>
+                    <div className="plan-column">
+                        <h4>Enterprise</h4>
+                        <p className="price">Contact Sales</p>
+                        <ul>
+                            <li>Everything in Business, plus:</li>
+                            <li>White Labeling</li>
+                            <li>Advanced Permissions</li>
+                            <li>Enterprise API</li>
+                            <li>Unlimited Custom Roles</li>
+                        </ul>
+                    </div>
+                </div>
+                {showAIBanner && (
+                    <div className="ai-banner-preview">
+                        {__('AI Add-on Banner Preview', 'clickup-pricing-table')}
+                    </div>
+                )}
+            </div>
+        </>
+    );
 }
