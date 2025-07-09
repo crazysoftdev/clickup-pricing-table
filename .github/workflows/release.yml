@@ -1,0 +1,45 @@
+name: Create Plugin Release
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger on tags like v1.0, v1.0.1, etc.
+
+jobs:
+  build-and-zip:
+    name: Build and Zip Plugin
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production assets
+        run: npm run build
+
+      - name: Create installable plugin zip
+        run: |
+          mkdir release
+          zip -r release/clickup-pricing-table.zip \
+            build/ \
+            src/clickup-pricing-table/render.php \
+            clickup-pricing-table.php \
+            readme.txt \
+            -x "*/.DS_Store" "*__MACOSX*"
+        # The 'zip' command is pre-installed on GitHub runners.
+        # We are explicitly including only the necessary files for the plugin to run.
+
+      - name: Upload zip as a build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: clickup-pricing-table-plugin
+          path: release/clickup-pricing-table.zip
